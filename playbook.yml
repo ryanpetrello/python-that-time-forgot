@@ -7,7 +7,9 @@
     - name: install a few necessary packages
       action: apt pkg="{{ item }}" state=installed
       with_items:
+        - apache2
         - make
+        - curl
 
     - name: download Python 1.2
       get_url: url='http://legacy.python.org/download/releases/src/python-1.2.tar.gz' dest=/etc/ mode=0440
@@ -34,3 +36,6 @@
         - "LIBS='-lm -lcrypt' ./configure --prefix=/usr/local"
         - make
         - make install
+
+    - name: "Copy our CGI Hello World script to the Apache cgi-bin"
+      copy: src="helloworld.py" dest="/usr/lib/cgi-bin" mode=0755

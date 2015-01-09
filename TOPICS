@@ -1,0 +1,58 @@
+1.  History
+    - Started on Python 2.3
+    - I've never used anything earlier than that, but I know people who have (picture of Doug)
+    - First version released on Python
+    - Can I use it?
+
+2.  Downloading/Compiling
+    - "I'm not an early adopter, let's give it a few releases."
+    - legacy.python.org
+    - Downloading, compiling (modern GCC, Ubuntu)
+    - stdio.h `getline`
+
+3.  Success!
+    - Invoke `python`, show copyright
+    - Readline is absent
+    - What's missing?
+        - How many Python modules vs present-day?
+        - Keyword arguments?
+        - list, dict, object
+
+4.  ...packages?
+    - There *is* a site-packages directory
+    - `pip` ?
+    - `python setup.py install`
+        - What did it do?
+            - No standardization?
+    - Let's copy a package in by hand and see if we can use it?
+
+5.  Let's write a web app?
+    - WSGI PEP333 (doesn't exist for another 10 years)?
+    - FastCGI (1995, 1996)?
+        - Why is it "Fast"er?
+        - History:
+            - Allan Saddi wrote fcgi.py, which became flup
+            - flup only works on modern Python, though :\
+            - Hard copies of fcgi.py are still floating around, but they're clearly using Python 2 features
+            - Can we find an old pre-Python2 fcgi.py ?
+                - Search google for "fcgi.py" in the date range "Jan 1, 1995 - Jan 1 2000 (screenshot)"
+                    - http://alldunn.com/python/fcgi.py (hey, it says it's free software, so I'm using it)
+                    - Robin Dunn wrote `wxpython`, a "cross-platform GUI API wxWidgets (which is written in C++) for the Python programming language" - seems legit!
+                - There's no cgi.FieldStorage yet (screenshot)!
+                    - $ wc -l /etc/Python/Lib/cgi.py 285 /etc/Python-1.2/Lib/cgi.py
+                    - ...only 285 lines of source code...okay, so a web app is probably out...
+    - Hail Mary: Plain, Simple CGI "Hello World"?
+        - YES (example)!
+            - $ curl localhost:80/cgi-bin/helloworld.py (screenshot)
+        - curl with apache and cgi-bin (screenshot)
+        - But `os.environ` doesn't even exist yet, so we can't really do anything interesting (like read form data)
+    - Let's try a *newer* version of Python and see if we can at least get a FastCFGI web app.  Let's aim for around ~1999-2000AD
+
+6.  Brief timeline/history of minor versions and Python community stuff
+    - Python 2
+    - Eggs, setuptools
+    - WSGI
+    - Web Frameworks
+        - Django?
+        - CherryPy?
+        - Earlier?
