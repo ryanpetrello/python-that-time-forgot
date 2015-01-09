@@ -55,7 +55,7 @@
         - make install
 
     - name: "Copy our PY1.2 CGI Hello World script to the Apache cgi-bin"
-      copy: src="helloworld.py" dest="/usr/lib/cgi-bin" mode=0755
+      copy: src="helloworld.cgi" dest="/usr/lib/cgi-bin" mode=0755
 
     - name: Compile and install Python 1.4
       shell: "{{ item }}"

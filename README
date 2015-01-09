@@ -3,10 +3,15 @@ Assuming you're in the same directory as this README (and the Vagrantfile):
 1.  Install Virtualbox (https://www.virtualbox.org)
 2.  Install Vagrant (https://www.vagrantup.com)
 3.  $ pip install ansible
-4.  $ vagrant up && vagrant ssh
-5.  $ python
+4.  $ vagrant up
 
 Tinker w/ Apache + CGI or FastCGI:
 
-$ curl -v localhost/cgi-bin/helloworld.py
-$ curl -v localhost/cgi-bin/helloworld.fcgi
+$ curl -v http://localhost:8080/cgi-bin/helloworld.cgi
+$ curl -v http://localhost:8080/cgi-bin/helloworld.fcgi
+
+SSH and play with Python 1.2 and 1.4:
+$ vagrant ssh
+
+Python 1.2: $ python
+Python 1.4: $ /home/vagrant/bin/python
