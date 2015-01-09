@@ -6,6 +6,7 @@ Assuming you're in the same directory as this README (and the Vagrantfile):
 4.  $ vagrant up && vagrant ssh
 5.  $ python
 
-Tinker w/ Apache + CGI:
+Tinker w/ Apache + CGI or FastCGI:
 
-$ curl localhost:80/cgi-bin/helloworld.py
+$ curl -v localhost/cgi-bin/helloworld.py
+$ curl -v localhost/cgi-bin/helloworld.fcgi

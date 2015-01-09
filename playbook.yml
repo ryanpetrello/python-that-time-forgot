@@ -8,27 +8,44 @@
       action: apt pkg="{{ item }}" state=installed
       with_items:
         - apache2
+        - libapache2-mod-fastcgi
         - make
         - curl
+
+    - name: enable FastCGI in Apache
+      command: "a2enmod actions fastcgi alias"
 
     - name: download Python 1.2
       get_url: url='http://legacy.python.org/download/releases/src/python-1.2.tar.gz' dest=/etc/ mode=0440
 
-    - name: unarchive Python source
+    - name: unarchive Python 1.2  source
       unarchive: src=/etc/python-1.2.tar.gz dest=/etc/ copy=no
 
+    - name: download Python 1.4
+      get_url: url="http://legacy.python.org/download/releases/src/python-1.4.tar.gz" dest=/etc/ mode=0440
+
+    - name: unarchive Python 1.4 source
+      unarchive: src=/etc/python-1.4.tar.gz dest=/etc/ copy=no
+
     # make fails with gcc complaining that the function `getline` is defined
-    # twice (with incompatible declarations).  Indeed, the Python 1.2 source
-    # code has a function named `getline`.  stdio.h getline predates Python,
-    # so it's odd that this ever worked, but whatever.  Let's rename the
-    # Python-specific function to something else (_get_line)
-    - name: "Fix a few source code warts so Python will compile with modern gcc"
+    # twice (with incompatible declarations).  Indeed, the Python 1.2
+    # source code has a function named `getline`.  stdio.h getline predates
+    # Python, so it's odd that this ever worked, but whatever.  Let's rename
+    # the Python-specific function to something else (_get_line)
+    - name: "Fix a few source code warts so Python 1.2 will compile with modern gcc"
       replace: dest="/etc/Python-1.2/Objects/fileobject.c" regexp="{{ item.before }}" replace="{{ item.after }}"
       with_items:
         - { before: 'getline', after: '_get_line' }
         - { before: 'file_get_line', after: 'filegetline' }
 
-    - name: Install Python 1.2
+    - name: "Fix a few source code warts so Python 1.4 will compile with modern gcc"
+      replace: dest="/etc/Python-1.4/{{ item.sourcefile }}" regexp="{{ item.before }}" replace="{{ item.after }}"
+      with_items:
+        - { sourcefile: "Objects/fileobject.c", before: 'getline', after: '_get_line' }
+        - { sourcefile: "Objects/fileobject.c", before: 'file_get_line', after: 'filegetline' }
+        - { sourcefile: "Modules/parsermodule.c", before: '^extern.*strdup.*', after: ''}
+
+    - name: Compile and install Python 1.2
       shell: "{{ item }}"
       args:
         chdir: "/etc/Python-1.2/"
@@ -37,5 +54,20 @@
         - make
         - make install
 
-    - name: "Copy our CGI Hello World script to the Apache cgi-bin"
+    - name: "Copy our PY1.2 CGI Hello World script to the Apache cgi-bin"
       copy: src="helloworld.py" dest="/usr/lib/cgi-bin" mode=0755
+
+    - name: Compile and install Python 1.4
+      shell: "{{ item }}"
+      args:
+        chdir: "/etc/Python-1.4/"
+      with_items:
+        - "LIBS='-lm -lcrypt' ./configure --prefix=/home/vagrant"
+        - make
+        - make install
+
+    - name: "Copy our PY1.4 FCGI Hello World script"
+      copy: src="helloworld.fcgi" dest="/usr/lib/cgi-bin/" mode=0755
+
+    - name: "Restart Apache"
+      service: name=apache2 state=restarted

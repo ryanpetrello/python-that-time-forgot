@@ -23,7 +23,8 @@
     - `pip` ?
     - `python setup.py install`
         - What did it do?
-            - No standardization?
+            - How did standardization come about?
+            - When did PyPI become a thing?
     - Let's copy a package in by hand and see if we can use it?
 
 5.  Let's write a web app?
@@ -43,10 +44,11 @@
                     - ...only 285 lines of source code...okay, so a web app is probably out...
     - Hail Mary: Plain, Simple CGI "Hello World"?
         - YES (example)!
-            - $ curl localhost:80/cgi-bin/helloworld.py (screenshot)
+            - $ curl -v localhost/cgi-bin/helloworld.py (screenshot)
         - curl with apache and cgi-bin (screenshot)
         - But `os.environ` doesn't even exist yet, so we can't really do anything interesting (like read form data)
-    - Let's try a *newer* version of Python and see if we can at least get a FastCFGI web app.  Let's aim for around ~1999-2000AD
+    - Python 1.4 (Oct 25, 1996) introduced cgi.FieldStorage!  Let's try a *newer* version of Python and see if we can at least get a FastCFGI web app.
+        - $ curl -v localhost/cgi-bin/helloworld.fcgi (screenshot)
 
 6.  Brief timeline/history of minor versions and Python community stuff
     - Python 2
