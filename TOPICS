@@ -48,17 +48,19 @@
                 - There's no cgi.FieldStorage yet (screenshot)!
                     - $ wc -l /etc/Python/Lib/cgi.py 285 /etc/Python-1.2/Lib/cgi.py
                     - ...only 285 lines of source code...okay, so a web app is probably out...
-    - Hail Mary: Plain, Simple CGI "Hello World"?
+                    - I'm cheating - Apache barely even exists yet (the first release was February of 1995, and I doubt it support FastCGI).
+    - Python 1.2 Hail Mary: Plain, Simple CGI "Hello World"?
         - YES (example)!
             - $ curl -v localhost/cgi-bin/helloworld.py (screenshot)
         - curl with apache and cgi-bin (screenshot)
-        - But `os.environ` doesn't even exist yet, so we can't really do anything interesting (like read form data)
+        - We have access to `os.environ`, so *could* write a rudimentary `cgi.FieldStorage` ourselves.
+        - Nah, let's move forward a few years.
     - Python 1.4 (Oct 25, 1996) introduced cgi.FieldStorage!  Let's try a *newer* version of Python and see if we can at least get a FastCFGI web app.
         - $ curl -v localhost/cgi-bin/helloworld.fcgi (screenshot)
 
 6.  Brief timeline/history of minor versions and Python community stuff
     - Python 2
-    - Eggs, setuptools
+    - distutils, Eggs, setuptools, pypi
     - WSGI
     - Web Frameworks
         - Django?
