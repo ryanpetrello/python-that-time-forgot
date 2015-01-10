@@ -7,11 +7,16 @@ Assuming you're in the same directory as this README (and the Vagrantfile):
 
 Tinker w/ Apache + CGI or FastCGI:
 
-$ curl -v http://localhost:8080/cgi-bin/helloworld.cgi
-$ curl -v http://localhost:8080/cgi-bin/helloworld.fcgi
+Python 1.2: $ curl -v http://localhost:8080/cgi-bin/helloworld.cgi
+Python 1.4: $ curl -v http://localhost:8080/cgi-bin/helloworld.fcgi
 
 SSH and play with Python 1.2 and 1.4:
 $ vagrant ssh
 
 Python 1.2: $ python
-Python 1.4: $ /home/vagrant/bin/python
+Python 1.4: $ python1.4
+
+Python 1.5:
+$ python1.5
+>>> from Mailman import Message
+>>> dir(Message)

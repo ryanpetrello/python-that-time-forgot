@@ -18,7 +18,7 @@
     - name: download Python 1.2
       get_url: url='http://legacy.python.org/download/releases/src/python-1.2.tar.gz' dest=/etc/ mode=0440
 
-    - name: unarchive Python 1.2  source
+    - name: unarchive Python 1.2 source
       unarchive: src=/etc/python-1.2.tar.gz dest=/etc/ copy=no
 
     - name: download Python 1.4
@@ -27,47 +27,76 @@
     - name: unarchive Python 1.4 source
       unarchive: src=/etc/python-1.4.tar.gz dest=/etc/ copy=no
 
+    - name: download Python 1.5
+      get_url: url="http://legacy.python.org/download/releases/src/python-1.5.tar.gz" dest=/etc/ mode=0440
+
+    - name: unarchive Python 1.5 source
+      unarchive: src=/etc/python-1.5.tar.gz dest=/etc/ copy=no
+
     # make fails with gcc complaining that the function `getline` is defined
-    # twice (with incompatible declarations).  Indeed, the Python 1.2
+    # twice (with incompatible declarations).  Indeed, the Python 1.2 - 1.5
     # source code has a function named `getline`.  stdio.h getline predates
     # Python, so it's odd that this ever worked, but whatever.  Let's rename
     # the Python-specific function to something else (_get_line)
-    - name: "Fix a few source code warts so Python 1.2 will compile with modern gcc"
-      replace: dest="/etc/Python-1.2/Objects/fileobject.c" regexp="{{ item.before }}" replace="{{ item.after }}"
+    - name: "fix a few source code warts so legacy Python will compile with modern gcc"
+      replace: dest="{{ item.sourcefile }}" regexp="{{ item.before }}" replace="{{ item.after }}"
       with_items:
-        - { before: 'getline', after: '_get_line' }
-        - { before: 'file_get_line', after: 'filegetline' }
+        - { sourcefile: "/etc/Python-1.2/Objects/fileobject.c", before: 'getline', after: '_get_line' }
+        - { sourcefile: "/etc/Python-1.2/Objects/fileobject.c", before: 'file_get_line', after: 'filegetline' }
+        - { sourcefile: "/etc/Python-1.4/Objects/fileobject.c", before: 'getline', after: '_get_line' }
+        - { sourcefile: "/etc/Python-1.4/Objects/fileobject.c", before: 'file_get_line', after: 'filegetline' }
+        - { sourcefile: "/etc/Python-1.4/Modules/parsermodule.c", before: '^extern.*strdup.*', after: ''}
+        - { sourcefile: "/etc/Python-1.5/Objects/fileobject.c", before: 'getline', after: '_get_line' }
 
-    - name: "Fix a few source code warts so Python 1.4 will compile with modern gcc"
-      replace: dest="/etc/Python-1.4/{{ item.sourcefile }}" regexp="{{ item.before }}" replace="{{ item.after }}"
-      with_items:
-        - { sourcefile: "Objects/fileobject.c", before: 'getline', after: '_get_line' }
-        - { sourcefile: "Objects/fileobject.c", before: 'file_get_line', after: 'filegetline' }
-        - { sourcefile: "Modules/parsermodule.c", before: '^extern.*strdup.*', after: ''}
+    - name: create an empty bin directory for Python 1.2
+      file: path="/home/vagrant/bin" state=directory
 
-    - name: Compile and install Python 1.2
+    - name: create an empty site-packages directory for Python 1.5
+      file: path="/usr/local/lib/python1.5/site-packages" state=directory
+
+    - name: compile and install Python 1.2
       shell: "{{ item }}"
       args:
         chdir: "/etc/Python-1.2/"
-      with_items:
-        - "LIBS='-lm -lcrypt' ./configure --prefix=/usr/local"
-        - make
-        - make install
-
-    - name: "Copy our PY1.2 CGI Hello World script to the Apache cgi-bin"
-      copy: src="helloworld.cgi" dest="/usr/lib/cgi-bin" mode=0755
-
-    - name: Compile and install Python 1.4
-      shell: "{{ item }}"
-      args:
-        chdir: "/etc/Python-1.4/"
       with_items:
         - "LIBS='-lm -lcrypt' ./configure --prefix=/home/vagrant"
         - make
         - make install
 
-    - name: "Copy our PY1.4 FCGI Hello World script"
+    - name: compile and install Python 1.4
+      shell: "{{ item }}"
+      args:
+        chdir: "/etc/Python-1.4/"
+      with_items:
+        - "LIBS='-lm -lcrypt' ./configure --prefix=/usr/local"
+        - make
+        - make install
+
+    - name: compile and install Python 1.5
+      shell: "{{ item }}"
+      args:
+        chdir: "/etc/Python-1.5/"
+      with_items:
+        - "LIBS='-lm -lcrypt' ./configure --prefix=/usr/local"
+        - make
+        - make install
+
+    - name: "copy our PY1.2 CGI Hello World script to the Apache cgi-bin"
+      copy: src="helloworld.cgi" dest="/usr/lib/cgi-bin" mode=0755
+
+    - name: "copy our PY1.4 FCGI Hello World script"
       copy: src="helloworld.fcgi" dest="/usr/lib/cgi-bin/" mode=0755
 
-    - name: "Restart Apache"
+    - name: "restart Apache"
       service: name=apache2 state=restarted
+
+    - name: "download a really old copy of Mailman so we can install it in Python 1.5's site-packages"
+      get_url: url='http://ftp.gnu.org/gnu/mailman/mailman-1.0.tar.gz' dest=/etc/ mode=0440
+
+    - name: unarchive Mailman source
+      command: "tar zxvf /etc/mailman-1.0.tar.gz"
+      args:
+        chdir: "/etc/"
+
+    - name: "install (by hand) a shared Python module from Mailman"
+      command: "sudo cp -R /etc/mailman-1.0/Mailman /usr/local/lib/python1.5/site-packages"

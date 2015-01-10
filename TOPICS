@@ -1,11 +1,12 @@
 1.  History
-    - Started on Python 2.3
+    - Started on Python 2.3, most days 2.7
     - I've never used anything earlier than that, but I know people who have (picture of Doug)
-    - First version released on Python
+    - First version of Python *ever* ?  January 1994
     - Can I use it?
 
 2.  Downloading/Compiling
     - "I'm not an early adopter, let's give it a few releases."
+    - Python 1.2 (13 April 1995)
     - legacy.python.org
     - Downloading, compiling (modern GCC, Ubuntu)
     - stdio.h `getline`
@@ -19,13 +20,18 @@
         - list, dict, object
 
 4.  ...packages?
-    - There *is* a site-packages directory
     - `pip` ?
+    - site-packages doesn't exist yet
+        - `site` module introduced in Python 1.4, but doesn't really do much
+        - `site_packages` isn't introduced until 1.5, including auto-load of the `site` module, and support for .pth files
+        - Python 1.5 (Dec 31, 1997)
     - `python setup.py install`
         - What did it do?
             - How did standardization come about?
             - When did PyPI become a thing?
     - Let's copy a package in by hand and see if we can use it?
+        - http://ftp.gnu.org/gnu/mailman/mailman-1.0.tar.gz
+        - sudo cp /home/vagrant/mailman-1.0/Mailman/Mailbox.py /home/vagrant/lib/python1.4/sharedmodules
 
 5.  Let's write a web app?
     - WSGI PEP333 (doesn't exist for another 10 years)?
@@ -58,3 +64,4 @@
         - Django?
         - CherryPy?
         - Earlier?
+    - Size of PyCon community?

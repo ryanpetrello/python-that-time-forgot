@@ -1,4 +1,4 @@
-#!/home/vagrant/bin/python
+#!/usr/local/bin/python
 #------------------------------------------------------------------------
 #               Copyright (c) 1998 by Total Control Software
 #                         All Rights Reserved

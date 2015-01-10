@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/home/vagrant/bin/python
 import sys
 
 print "Content-type: text/html"
