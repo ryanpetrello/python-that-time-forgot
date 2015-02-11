@@ -31,7 +31,7 @@
             - When did PyPI become a thing?
     - Let's copy a package in by hand and see if we can use it?
         - http://ftp.gnu.org/gnu/mailman/mailman-1.0.tar.gz
-        - sudo cp /home/vagrant/mailman-1.0/Mailman/Mailbox.py /home/vagrant/lib/python1.4/sharedmodules
+        - sudo cp /home/vagrant/mailman-1.0/Mailman/Mailbox.py /usr/local/lib/python1.4/sharedmodules
 
 5.  Let's write a web app?
     - WSGI PEP333 (doesn't exist for another 10 years)?
